@@ -1,6 +1,20 @@
 import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
+
+function getCookiesPath() {
+  const cookiesStr = process.env.YOUTUBE_COOKIES;
+  if (!cookiesStr) return null;
+  const tempCookiesPath = path.join(os.tmpdir(), 'cookies.txt');
+  try {
+    fs.writeFileSync(tempCookiesPath, cookiesStr.trim(), 'utf-8');
+    return tempCookiesPath;
+  } catch (err) {
+    console.error('Failed to write cookies file:', err);
+    return null;
+  }
+}
 
 const YTDLP_BIN = process.env.YTDLP_BIN || path.join(
   process.cwd(),
@@ -71,6 +85,11 @@ export async function GET(request) {
     '--quiet',
     '--ffmpeg-location', FFMPEG_BIN,
   ];
+
+  const cookiesPath = getCookiesPath();
+  if (cookiesPath) {
+    spawnArgs.push('--cookies', cookiesPath);
+  }
 
   if (type === 'audio') {
     spawnArgs.push(

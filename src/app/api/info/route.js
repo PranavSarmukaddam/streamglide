@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { spawn } from 'child_process';
 import path from 'path';
+import fs from 'fs';
+import os from 'os';
 
 const YTDLP_BIN = process.env.YTDLP_BIN || path.join(
   process.cwd(),
@@ -9,6 +11,19 @@ const YTDLP_BIN = process.env.YTDLP_BIN || path.join(
   'bin',
   process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp'
 );
+
+function getCookiesPath() {
+  const cookiesStr = process.env.YOUTUBE_COOKIES;
+  if (!cookiesStr) return null;
+  const tempCookiesPath = path.join(os.tmpdir(), 'cookies.txt');
+  try {
+    fs.writeFileSync(tempCookiesPath, cookiesStr.trim(), 'utf-8');
+    return tempCookiesPath;
+  } catch (err) {
+    console.error('Failed to write cookies file:', err);
+    return null;
+  }
+}
 
 /** Run yt-dlp and collect stdout/stderr, resolving even on non-zero exit */
 function runYtDlp(args) {
@@ -41,14 +56,21 @@ export async function POST(request) {
       );
     }
 
-    const { stdout, stderr } = await runYtDlp([
+    const args = [
       url.trim(),
       '--dump-json',
       '--no-playlist',
       '--no-check-certificates',
       '--no-warnings',
       '--quiet',
-    ]);
+    ];
+
+    const cookiesPath = getCookiesPath();
+    if (cookiesPath) {
+      args.push('--cookies', cookiesPath);
+    }
+
+    const { stdout, stderr } = await runYtDlp(args);
 
     // stdout contains the JSON even if exit code was non-zero
     const raw = stdout.trim();
