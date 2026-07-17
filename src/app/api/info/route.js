@@ -69,6 +69,7 @@ export async function POST(request) {
       '--no-check-certificates',
       '--no-warnings',
       '--quiet',
+      '--ignore-no-formats-error',
     ];
 
     const cookiesPath = getCookiesPath();
