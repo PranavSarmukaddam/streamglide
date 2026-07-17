@@ -1,0 +1,31 @@
+[
+  {
+    "customer": {
+      "name": "Pranav Sarmukaddam",
+      "address": "12, Jeevan Chhaya, LIC Officers Staff Quarters",
+      "city": "Vadodara",
+      "zip": "390021"
+    },
+    "items": [
+      {
+        "id": "3",
+        "name": "Cozy Black Hoodie",
+        "description": "A warm and relaxed black hoodie perfect for chilly days or casual outings.",
+        "price": 39.99,
+        "sizes": [
+          "M",
+          "L",
+          "XL"
+        ],
+        "stock": 25,
+        "imageUrl": "/images/black-hoodie.png",
+        "size": "M",
+        "quantity": 1
+      }
+    ],
+    "total": 39.99,
+    "date": "2026-05-20T11:47:59.559Z",
+    "status": "Processing",
+    "id": "4deb899e-3536-438d-98fe-1e3cf374d92e"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1",
+    "name": "Classic White T-Shirt",
+    "description": "A comfortable, everyday essential white t-shirt made from 100% organic cotton.",
+    "price": 19.99,
+    "sizes": ["S", "M", "L", "XL"],
+    "stock": 50,
+    "imageUrl": "/images/white-tshirt.png"
+  },
+  {
+    "id": "2",
+    "name": "Slim Fit Denim Jeans",
+    "description": "Premium quality slim fit blue jeans with a hint of stretch for ultimate comfort.",
+    "price": 49.99,
+    "sizes": ["30", "32", "34", "36"],
+    "stock": 30,
+    "imageUrl": "/images/denim-jeans.png"
+  },
+  {
+    "id": "3",
+    "name": "Cozy Black Hoodie",
+    "description": "A warm and relaxed black hoodie perfect for chilly days or casual outings.",
+    "price": 39.99,
+    "sizes": ["M", "L", "XL"],
+    "stock": 25,
+    "imageUrl": "/images/black-hoodie.png"
+  },
+  {
+    "id": "4",
+    "name": "Minimalist White Sneakers",
+    "description": "Sleek and versatile white sneakers that pair effortlessly with any outfit.",
+    "price": 59.99,
+    "sizes": ["8", "9", "10", "11", "12"],
+    "stock": 40,
+    "imageUrl": "/images/white-sneakers.png"
+  }
+]
