@@ -16,13 +16,19 @@ function getCookiesPath() {
   }
 }
 
-const YTDLP_BIN = process.env.YTDLP_BIN || path.join(
-  process.cwd(),
-  'node_modules',
-  'yt-dlp-exec',
-  'bin',
-  process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp'
-);
+const YTDLP_BIN = process.env.YTDLP_BIN || (() => {
+  if (process.platform !== 'win32') {
+    if (fs.existsSync('/usr/local/bin/yt-dlp')) return '/usr/local/bin/yt-dlp';
+    if (fs.existsSync('/usr/bin/yt-dlp')) return '/usr/bin/yt-dlp';
+  }
+  return path.join(
+    process.cwd(),
+    'node_modules',
+    'yt-dlp-exec',
+    'bin',
+    process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp'
+  );
+})();
 
 const FFMPEG_BIN = process.env.FFMPEG_BIN || path.join(
   process.cwd(),

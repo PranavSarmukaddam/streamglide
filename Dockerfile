@@ -1,8 +1,9 @@
 # Base image
 FROM node:22-alpine
 
-# Install system dependencies (python3 for yt-dlp, ffmpeg for media merging)
-RUN apk add --no-cache python3 ffmpeg
+# Install system dependencies (python3 + pip for latest yt-dlp, ffmpeg for media merging)
+RUN apk add --no-cache python3 ffmpeg py3-pip && \
+    pip3 install --break-system-packages --upgrade yt-dlp
 
 WORKDIR /app
 
