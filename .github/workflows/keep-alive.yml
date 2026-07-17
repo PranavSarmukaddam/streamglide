@@ -1,0 +1,22 @@
+name: Keep StreamGlide Alive
+
+on:
+  schedule:
+    - cron: '*/15 * * * *' # Run every 15 minutes
+  workflow_dispatch: # Allows manual triggering from GitHub UI
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping App
+        run: |
+          URL="${{ secrets.RENDER_URL }}"
+          if [ -z "$URL" ]; then
+            echo "ERROR: RENDER_URL secret is not set."
+            echo "Please go to your GitHub repository -> Settings -> Secrets and variables -> Actions, and add a secret named RENDER_URL containing your Render deployment link."
+            exit 1
+          fi
+          echo "Pinging StreamGlide app at $URL..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          echo "Response code: $response"
