@@ -1,5 +1,5 @@
 # Base image
-FROM node:18-alpine
+FROM node:22-alpine
 
 # Install system dependencies (python3 for yt-dlp, ffmpeg for media merging)
 RUN apk add --no-cache python3 ffmpeg
