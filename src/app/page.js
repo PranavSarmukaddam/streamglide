@@ -110,7 +110,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="site-footer">
         <span className="site-footer__note">
-          © {new Date().getFullYear()} StreamGlide — All rights reserved.
+          © {new Date().getFullYear()} StreamGlide - All rights reserved.
         </span>
         <span className="site-footer__warning">
           🛡️ Respect copyright regulations and download for personal use only.
