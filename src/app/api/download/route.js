@@ -30,12 +30,18 @@ const YTDLP_BIN = process.env.YTDLP_BIN || (() => {
   );
 })();
 
-const FFMPEG_BIN = process.env.FFMPEG_BIN || path.join(
-  process.cwd(),
-  'node_modules',
-  'ffmpeg-static',
-  process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'
-);
+const FFMPEG_BIN = process.env.FFMPEG_BIN || (() => {
+  if (process.platform !== 'win32') {
+    if (fs.existsSync('/usr/bin/ffmpeg')) return '/usr/bin/ffmpeg';
+    if (fs.existsSync('/usr/local/bin/ffmpeg')) return '/usr/local/bin/ffmpeg';
+  }
+  return path.join(
+    process.cwd(),
+    'node_modules',
+    'ffmpeg-static',
+    process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'
+  );
+})();
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -74,11 +80,7 @@ export async function GET(request) {
   const filename = `ytdown-${safeQuality}-${Date.now()}.${ext}`;
 
   // Make sure a temp directory exists in workspace
-  const tempDir = path.join(process.cwd(), 'temp_downloads');
-  if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir, { recursive: true });
-  }
-
+  const tempDir = os.tmpdir();
   const tempFilePath = path.join(tempDir, filename);
 
   const spawnArgs = [
