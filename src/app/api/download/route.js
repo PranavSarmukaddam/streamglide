@@ -136,7 +136,9 @@ export async function GET(request) {
       proc.on('error', (err) => reject(err));
       proc.on('close', (code) => {
         if (code !== 0) {
-          reject(new Error(`yt-dlp exited with code ${code}. Stderr: ${stderr.trim()}`));
+          const cookieExists = cookiesPath ? fs.existsSync(cookiesPath) : false;
+          const cookieSize = cookieExists ? fs.statSync(cookiesPath).size : 0;
+          reject(new Error(`yt-dlp exited with code ${code}. Stderr: ${stderr.trim()} (Cookie file: ${cookieExists ? 'created' : 'missing'}, size: ${cookieSize} bytes)`));
         } else {
           resolve();
         }
