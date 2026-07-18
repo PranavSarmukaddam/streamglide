@@ -18,12 +18,31 @@ const YTDLP_BIN = process.env.YTDLP_BIN || (() => {
   );
 })();
 
+function normalizeCookies(cookiesStr) {
+  if (!cookiesStr) return '';
+  return cookiesStr
+    .split('\n')
+    .map((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return line;
+      const parts = trimmed.split(/\s+/);
+      if (parts.length >= 7) {
+        const first6 = parts.slice(0, 6);
+        const value = parts.slice(6).join(' ');
+        return [...first6, value].join('\t');
+      }
+      return parts.join('\t');
+    })
+    .join('\n');
+}
+
 function getCookiesPath() {
   const cookiesStr = process.env.YOUTUBE_COOKIES;
   if (!cookiesStr) return null;
   const tempCookiesPath = path.join(os.tmpdir(), 'cookies.txt');
   try {
-    fs.writeFileSync(tempCookiesPath, cookiesStr.trim(), 'utf-8');
+    const normalized = normalizeCookies(cookiesStr);
+    fs.writeFileSync(tempCookiesPath, normalized, 'utf-8');
     return tempCookiesPath;
   } catch (err) {
     console.error('Failed to write cookies file:', err);
@@ -70,6 +89,7 @@ export async function POST(request) {
       '--no-warnings',
       '--quiet',
       '--ignore-no-formats-error',
+      '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     ];
 
     const cookiesPath = getCookiesPath();
