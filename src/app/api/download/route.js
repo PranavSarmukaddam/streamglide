@@ -139,7 +139,19 @@ export async function GET(request) {
         if (code !== 0) {
           const cookieExists = cookiesPath ? fs.existsSync(cookiesPath) : false;
           const cookieSize = cookieExists ? fs.statSync(cookiesPath).size : 0;
-          reject(new Error(`yt-dlp exited with code ${code}. Stderr: ${stderr.trim()} (Cookie file: ${cookieExists ? 'created' : 'missing'}, size: ${cookieSize} bytes)`));
+          let cookieSample = 'none';
+          if (cookieExists) {
+            try {
+              const content = fs.readFileSync(cookiesPath, 'utf-8');
+              const nonCommentLine = content.split('\n').find(l => l.trim() && !l.trim().startsWith('#'));
+              if (nonCommentLine) {
+                cookieSample = nonCommentLine.replace(/\t/g, '[TAB]');
+              }
+            } catch (e) {
+              cookieSample = 'read-error: ' + e.message;
+            }
+          }
+          reject(new Error(`yt-dlp exited with code ${code}. Stderr: ${stderr.trim()} (Cookie size: ${cookieSize} bytes, sample: ${cookieSample})`));
         } else {
           resolve();
         }
