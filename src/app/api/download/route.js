@@ -109,12 +109,14 @@ export async function GET(request) {
 
   try {
     // 1. Download and mux locally first
+    let stderr = '';
     await new Promise((resolve, reject) => {
-      const proc = spawn(YTDLP_BIN, spawnArgs, { stdio: 'ignore' });
+      const proc = spawn(YTDLP_BIN, spawnArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
+      proc.stderr.on('data', (d) => { stderr += d.toString(); });
       proc.on('error', (err) => reject(err));
       proc.on('close', (code) => {
         if (code !== 0) {
-          reject(new Error(`yt-dlp exited with code ${code}`));
+          reject(new Error(`yt-dlp exited with code ${code}. Stderr: ${stderr.trim()}`));
         } else {
           resolve();
         }
